@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="admin/tool/delivery/db" VERSION="20131101" COMMENT="XMLDB file for Moodle delivery tool"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="tool_dbcleaner" COMMENT="a description of a foreign key constraint">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="sourcetable" />
+        <FIELD NAME="sourcetable" TYPE="char" LENGTH="64" NOTNULL="false" SEQUENCE="false" PREVIOUS="id" NEXT="sourcefield" />
+        <FIELD NAME="sourcefield" TYPE="char" LENGTH="64" NOTNULL="false" SEQUENCE="false" PREVIOUS="sourcetable" NEXT="remotekeytable" />
+        <FIELD NAME="remotekeytable" TYPE="char" LENGTH="64" NOTNULL="false" SEQUENCE="false" PREVIOUS="sourcefield" NEXT="remotekeyfield" />
+        <FIELD NAME="remotekeyfield" TYPE="char" LENGTH="64" NOTNULL="false" SEQUENCE="false" PREVIOUS="remotekeytable" NEXT="remotesqlselect" />
+        <FIELD NAME="remotesqlselect" TYPE="char" LENGTH="64" NOTNULL="false" SEQUENCE="false" PREVIOUS="remotekeyfield" NEXT="origin" />
+        <FIELD NAME="origin" TYPE="char" LENGTH="10" NOTNULL="true" SEQUENCE="false" PREVIOUS="remotesqlselect" />
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+      </KEYS>
+    </TABLE>
+  </TABLES>
+</XMLDB>
