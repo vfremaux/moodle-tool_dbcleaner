@@ -26,5 +26,5 @@ defined('MOODLE_INTERNAL') || die;
 
 if ($hassiteconfig) {
     $ADMIN->add('tools', new admin_externalpage('tooldbcleaner', get_string('dbcleaner', 'tool_dbcleaner'),
-        $CFG->wwwroot.'/'.$CFG->admin.'/tool/dbcleaner/index.php'));
+        $CFG->wwwroot.'/'.$CFG->admin.'/tool/dbcleaner/index.php', $capability, false));
 }
