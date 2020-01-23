@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['privacy:metadata'] = 'Le plugin de nettoayge de base de données ne détient aucune donnée personnelle.';
+
 $string['cachedef_cleanmap'] = 'Nettoyeur de base';
 $string['pluginname'] = 'Nettoyeur de base de données';
 $string['pluginnamestr'] = 'Plugin';
@@ -40,6 +42,7 @@ $string['purgingrecursive'] = 'Suppression de {$a->q} cascades pour {$a->src}';
 $string['evaluating'] = 'Trouvé {$a->q} orphelins dans la table {$a->t} -- Taux de corruption : {$a->cr}%';
 $string['addkey'] = 'Ajouter une définition de clef étrangère';
 $string['recheck'] = 'Tester à nouveau';
+$string['process'] = 'Traitement';
 $string['fkeys'] = 'Intégrité des clefs étrangères (enregistrements orphelins)';
 $string['deletedplugins'] = 'Plugins supprimés';
 $string['nomissingplugins'] = 'Aucun plugin n\'est manquant';

@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['privacy:metadata'] = 'The Database Cleaner plugin does not store any personal data.';
+
 $string['cachedef_cleanmap'] = 'DB Cleaning mapping';
 $string['pluginname'] = 'Database cleaner';
 $string['dbcleaner'] = 'Database cleaner tool';
@@ -35,6 +37,7 @@ $string['simulate'] = 'Simulate';
 $string['scan'] = 'Examine the database';
 $string['cleandb'] = 'Cleanup bad data in database';
 $string['goback'] = 'Cancel';
+$string['process'] = 'Processing';
 $string['purging'] = 'Deleting orphan records from {$a}';
 $string['purgingrecursive'] = 'Deleting {$a->q} recursive orphan records from {$a->src}';
 $string['evaluating'] = 'Found {$a->q} orphans in table {$a->t} -- Table Corruption : {$a->cr}%';

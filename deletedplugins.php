@@ -46,8 +46,7 @@ if (!empty($action)) {
 
 $PAGE->set_pagelayout('admin');
 
-$pluginlist = dbcleaner_component::get_missing_plugins();
-$pluginlistfromversion = dbcleaner_component::get_missing_plugins_from_versions();
+$pluginlist = dbcleaner_component::get_missing_plugins_from_versions();
 
 $renderer = $PAGE->get_renderer('tool_dbcleaner');
 
@@ -59,10 +58,8 @@ if (!empty($results)) {
     echo $OUTPUT->box('<pre>'.implode("\n", $results).'</pre>', 'tool-dbcleaner-cleanup-results');
 }
 
-echo $OUTPUT->heading(get_string('fromcomponentmanager', 'tool_dbcleaner'), 3);
-echo $renderer->missing_plugin_list($pluginlist);
 echo $OUTPUT->heading(get_string('fromversionrecords', 'tool_dbcleaner'), 3);
-echo $renderer->missing_plugin_list($pluginlistfromversion);
+echo $renderer->missing_plugin_list($pluginlist);
 
 echo '<center>';
 echo $OUTPUT->single_button(new moodle_url('/admin/tool/dbcleaner/deletedplugins.php', array('what' => 'cleanup', 'sesskey' => sesskey())), get_string('cleanupplugins', 'tool_dbcleaner'));
