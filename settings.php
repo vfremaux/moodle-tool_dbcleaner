@@ -24,16 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-if (is_dir($CFG->dirroot.'/local/adminsettings')) {
-    require_once($CFG->dirroot.'/local/adminsettings/lib.php');
-    list($hasconfig, $hassiteconfig, $capability) = local_adminsettings_access();
-} else {
-    // Standard Moodle code
-    $capability = 'moodle/site:config';
-    $hasconfig = $hassiteconfig = has_capability($capability, context_system::instance());
-}
-
 if ($hassiteconfig) {
     $ADMIN->add('tools', new admin_externalpage('tooldbcleaner', get_string('dbcleaner', 'tool_dbcleaner'),
-        $CFG->wwwroot.'/'.$CFG->admin.'/tool/dbcleaner/index.php', $capability, false));
+        $CFG->wwwroot.'/'.$CFG->admin.'/tool/dbcleaner/index.php'));
 }
