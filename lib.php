@@ -242,4 +242,61 @@ class dbcleaner_component extends core_component {
     
         return $cleanmaptable;
     }
+
+    public static function get_missing_plugins_from_versions() {
+        global $DB;
+
+        $missingplugins = array();
+        $plugintypes = \core_component::get_plugin_types();
+
+        $versions = $DB->get_records('config_plugins', array('name' => 'version'));
+        if ($versions) {
+            foreach ($versions as $v) {
+                $parts = explode('_', $v->plugin);
+                $plugintype = array_shift($parts);
+                $pluginname = implode('_', $parts);
+                if (array_key_exists($plugintype, $plugintypes)) {
+                    $path = $plugintypes[$plugintype].'/'.$pluginname;
+                    if (!is_dir($path)) {
+                        mtrace("Missing plugin $path");
+                        $missingplugins[$plugintype][$pluginname] = $path;
+                    }
+                }
+            }
+        }
+
+        return $missingplugins;
+    }
+
+    /**
+     * Cleans all known location with this plugin reference
+     *
+     */
+    public static function clean_plugin($ptype, $pname) {
+        global $DB;
+
+        $normalizedname = $ptype.'_'.$pname;
+        $capname = $ptype.'/'.$pname;
+
+        $DB->delete_records('config_plugins', array('plugin' => $normalizedname));
+        $DB->delete_records('capabilities', array('component' => $normalizedname));
+        $DB->delete_records_select('role_capabilities', ' capability LIKE ? ', array($capname.':%'));
+        $DB->delete_records('mnet_rpc', array('plugintype' => $ptype, 'pluginname' => $pname));
+        $DB->delete_records('mnet_remote_rpc', array('plugintype' => $ptype, 'pluginname' => $pname));
+        $DB->delete_records('external_functions', array('component' => $normalizedname));
+        $DB->delete_records('external_services', array('component' => $normalizedname));
+        $select = $DB->sql_like('component', ':component');
+        $DB->delete_records_select('external_services_fonctions', $select, array('component' => $normalizedname.'%'));
+
+        /// Moodle 36
+        $DB->delete_records('favourite', array('component' => $normalizedname));
+
+        // Remove all files.
+        $fs = get_file_storage();
+
+        $contexts = $DB->get_records('files', array('component' => $normalizedname), 'contextid', 'DISTINCT(contextid) as id');
+        foreach ($contexts as $ctx) {
+            $fs->delete_area_files($ctx->id, $normalizedname);
+        }
+    }
 }

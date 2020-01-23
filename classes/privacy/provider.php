@@ -15,22 +15,31 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details.
+ * Privacy Subsystem implementation for tool_dbcleaner.
  *
- * @package     tool_dbcleaner
- * @category    tool
- * @author      Valery Fremaux <valery.fremaux@gmail.com>
- * @copyright   2016 Valery Fremaux (http://www.mylearningfactory.com)
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    tool_dbcleaner
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+namespace tool_dbcleaner\privacy;
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2019021900; // The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires  = 2018050800; // Requires this Moodle version.
-$plugin->component = 'tool_dbcleaner'; // Full name of the plugin (used for diagnostics).
-$plugin->release = "3.5.0 (Build 2018112800)";
-$plugin->maturity = MATURITY_BETA;
+/**
+ * Privacy Subsystem for tool_dbcleaner implementing null_provider.
+ *
+ * @copyright  2018 Zig Tan <zig@moodle.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class provider implements \core_privacy\local\metadata\null_provider {
 
-// Non Moodle attributes.
-$plugin->codeincrement = '3.5.0001';
+    /**
+     * Get the language string identifier with the component's language
+     * file to explain why this plugin stores no data.
+     *
+     * @return  string
+     */
+    public static function get_reason() : string {
+        return 'privacy:metadata';
+    }
+}

@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 
 class tool_dbcleaner_renderer extends plugin_renderer_base {
 
-    function keylist($keylist) {
+    public function keylist($keylist) {
         global $OUTPUT;
 
         $sourcetablestr = get_string('sourcetable', 'tool_dbcleaner');
@@ -52,12 +52,41 @@ class tool_dbcleaner_renderer extends plugin_renderer_base {
         return html_writer::table($table);
     }
 
-    function addkey_link() {
+    public function addkey_link() {
         $str = '<div class="tool-dbcleaner addlink">';
         $addkeyurl = new moodle_url('/admin/tool/dbcleaner/addkey.php');
         $str .= '<a href="'.$addkeyurl.'">'.get_string('addkey', 'tool_dbcleaner').'</a>';
         $str .= '</div>';
         return $str;
+    }
+
+    public function missing_plugin_list(&$missingplugins) {
+
+        $pluginstr = get_string('pluginnamestr', 'tool_dbcleaner');
+        $pathstr = get_string('path', 'tool_dbcleaner');
+
+        $template = new StdClass;
+
+        if (empty($missingplugins)) {
+            $template->noplugins = $this->output->notification(get_string('nomissingplugins', 'tool_dbcleaner'), 'success');
+        } else {
+            foreach ($missingplugins as $plugintype => $typelist) {
+                $table = new html_table();
+                $table->head = array($pluginstr, $pathstr, '');
+                $table->align = array('left', 'left', 'right');
+                $table->size = array('40%', '40%', '20%');
+
+                foreach ($typelist as $pname => $path) {
+                    $params =array('what' => 'cleanup', 'plugin' => $plugintype.'_'.$pname);
+                    $cleanurl = new moodle_url('/admin/tool/dbcleaner/deletedplugins.php', $params);
+                    $cleanpluginlink = html_writer::link($cleanurl, get_string('cleanup', 'tool_dbcleaner'));
+                    $row = array($plugintype.'_'.$pname, $path, $cleanpluginlink);
+                    $table->data[] = $row;
+                }
+            }
+            $template->plugintable = html_writer::table($table);
+        }
+        return $this->output->render_from_template('tool_dbcleaner/missingplugins', $template);
     }
 
 }

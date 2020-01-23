@@ -86,7 +86,7 @@ if ($confirm) {
 
 if (!$confirm) {
     echo '<center>';
-    echo $OUTPUT->single_button(new moodle_url('/admin/tool/dbcleaner/process.php', array('confirm' => 1, 'sesskey' => sesskey())), get_string('confirm', 'tool_dbcleaner'));
+    echo $OUTPUT->single_button(new moodle_url('/admin/tool/dbcleaner/process.php', array('confirm' => 1, 'sesskey' => sesskey())), get_string('cleandb', 'tool_dbcleaner'));
     echo '</center>';
 } else {
     echo '<center>';

@@ -26,11 +26,15 @@ require_once($CFG->dirroot.'/admin/tool/dbcleaner/lib.php');
 require_once($CFG->libdir.'/adminlib.php');
 
 $action = optional_param('what', false, PARAM_TEXT);
+$url = new moodle_url('/admin/tool/dbcleaner/fkeys.php');
+
+$PAGE->set_url($url);
 
 require_login();
 admin_externalpage_setup('tooldbcleaner');
 
 require_once($CFG->dirroot.'/admin/tool/dbcleaner/lib.php');
+require_once($CFG->dirroot.'/admin/tool/dbcleaner/fkeys.controller.php');
 
 if (!empty($action)) {
     $controller = new dbcleaner_index_controller();
@@ -48,14 +52,14 @@ $renderer = $PAGE->get_renderer('tool_dbcleaner');
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('dbcleaner', 'tool_dbcleaner'));
 
-echo $OUTPUT->box(get_string('deletedplugins_desc', 'tool_dbcleaner'));
-echo '<center>';
-echo $OUTPUT->single_button(new moodle_url('/admin/tool/dbcleaner/deletedplugins.php', array('confirm' => 0, 'sesskey' => sesskey())), get_string('deletedplugins', 'tool_dbcleaner'));
-echo '</center>';
+echo $renderer->addkey_link();
 
-echo $OUTPUT->box(get_string('fkeys_desc', 'tool_dbcleaner'));
+echo $renderer->keylist($keylist);
+
+echo $renderer->addkey_link();
+
 echo '<center>';
-echo $OUTPUT->single_button(new moodle_url('/admin/tool/dbcleaner/fkeys.php', array('confirm' => 0, 'sesskey' => sesskey())), get_string('fkeys', 'tool_dbcleaner'));
+echo $OUTPUT->single_button(new moodle_url('/admin/tool/dbcleaner/process.php', array('confirm' => 0, 'sesskey' => sesskey())), get_string('scan', 'tool_dbcleaner'));
 echo '</center>';
 
 echo $OUTPUT->footer();
