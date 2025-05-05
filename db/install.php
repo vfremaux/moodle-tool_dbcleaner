@@ -21,7 +21,7 @@ defined('MOODLE_INTERNAL') || die;
  *
  * @package    tool_dbcleaner
  * @category   tool
- * @copyright  2010 David Mudrak <david.mudrak@gmail.com>
+ * @copyright  2010 Valery Fremaux <valery.fremaux@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once($CFG->dirroot.'/admin/tool/dbcleaner/lib.php');

@@ -26,11 +26,12 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2016041900; // The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires  = 2016051900; // Requires this Moodle version.
+$plugin->version   = 2025042900; // The current plugin version (Date: YYYYMMDDXX).
+$plugin->requires  = 2022112801; // Requires this Moodle version.
 $plugin->component = 'tool_dbcleaner'; // Full name of the plugin (used for diagnostics).
-$plugin->release = "3.1.0 (Build 2016041900)";
-$plugin->maturity = MATURITY_ALPHA;
+$plugin->release = "4.5.0 (Build 2025042900)";
+$plugin->maturity = MATURITY_RC;
+$plugin->supported = [403, 405];
 
 // Non Moodle attributes.
-$plugin->codeincrement = '3.1.0001';
+$plugin->codeincrement = '4.5.0002';

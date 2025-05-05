@@ -15,33 +15,31 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * DB Cleaner tool upgrades
+ * Privacy Subsystem implementation for tool_dbcleaner.
  *
  * @package    tool_dbcleaner
- * @author      Valery Fremaux <valery.fremaux@gmail.com>
- * @copyright   2017 Valery Fremaux <valery.fremaux@gmail.com> (MyLearningFactory.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+namespace tool_dbcleaner\privacy;
+
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot.'/admin/tool/dbcleaner/lib.php');
-
 /**
- * Standard upgrade
+ * Privacy Subsystem for tool_dbcleaner implementing null_provider.
+ *
+ * @copyright  2018 Zig Tan <zig@moodle.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-function xmldb_tool_dbcleaner_upgrade($oldversion) {
-    global $CFG, $DB, $OUTPUT;
+class provider implements \core_privacy\local\metadata\null_provider {
 
-    $dbman = $DB->get_manager();
-
-    if ($oldversion < 2024071800) {
-
-        // Reload cache to absorb moodle 4.1 changes.
-        dbcleaner_component::get_update_cache();
-        
-        // Tool Sync savepoint reached.
-        upgrade_plugin_savepoint(true, 2024071800, 'tool', 'dbcleaner');
+    /**
+     * Get the language string identifier with the component's language
+     * file to explain why this plugin stores no data.
+     *
+     * @return  string
+     */
+    public static function get_reason() : string {
+        return 'privacy:metadata';
     }
-
-    return true;
 }

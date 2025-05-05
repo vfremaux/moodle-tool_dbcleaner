@@ -37,9 +37,13 @@ $PAGE->set_context($systemcontext);
 
 $mform = new ForeignKey_Form();
 
+if ($mform->is_cancelled()) {
+    redirect(new moodle_url('/admin/tool/dbcleaner/index.php'));
+}
+
 if ($data = $mform->get_data()) {
 
-    $DB->delete_record('tool_dbcleaner', array('sourcetable' => $data->sourcetable, 'sourcefield' => $data->sourcefield, 'remotekeytable' => $data->remotekeytable, 'remotekeyfield' => $data->remotekeyfield));
+    $DB->delete_records('tool_dbcleaner', array('sourcetable' => $data->sourcetable, 'sourcefield' => $data->sourcefield, 'remotekeytable' => $data->remotekeytable, 'remotekeyfield' => $data->remotekeyfield));
 
     $data->origin = 'custom';
     $DB->insert_record('tool_dbcleaner', $data);

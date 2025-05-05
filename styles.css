@@ -4,3 +4,15 @@
     text-align:right;
     width:95%;
 }
+
+.tool-dbcleaner-form-buttons {
+    text-align: center;
+}
+
+.tool-dbcleaner-form-buttons .singlebutton {
+    display: inline-block;
+}
+
+.tool-dbcleaner-form {
+    padding: 40px;
+}

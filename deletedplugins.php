@@ -25,40 +25,51 @@ require('../../../config.php');
 require_once($CFG->dirroot.'/admin/tool/dbcleaner/lib.php');
 require_once($CFG->libdir.'/adminlib.php');
 
+define('IGNORE_COMPONENT_CACHE', true);
+
 $action = optional_param('what', false, PARAM_TEXT);
+$url = new moodle_url('/admin/tool/dbcleaner/deletedplugins.php');
+
+$PAGE->set_url($url);
 
 $systemcontext = context_system::instance();
+$PAGE->set_context($systemcontext);
 
 require_login();
 require_capability('moodle/site:config', $systemcontext);
 admin_externalpage_setup('tooldbcleaner');
 
 require_once($CFG->dirroot.'/admin/tool/dbcleaner/lib.php');
+require_once($CFG->dirroot.'/admin/tool/dbcleaner/deletedplugins.controller.php');
+
+if (!empty($action)) {
+    $controller = new dbcleaner_deletedplugins_controller();
+    $controller->receive($action);
+    $results = $controller->process($action);
+}
 
 $PAGE->set_pagelayout('admin');
-$PAGE->set_context($systemcontext);
 
-$keylist = dbcleaner_component::get_update_cache();
+$pluginlist = dbcleaner_component::get_missing_plugins_from_versions();
 
 $renderer = $PAGE->get_renderer('tool_dbcleaner');
 
 // Otherwise display the settings form.
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('dbcleaner', 'tool_dbcleaner'));
+echo $OUTPUT->heading(get_string('deletedplugins', 'tool_dbcleaner'));
 
-echo $OUTPUT->box(get_string('deletedplugins_desc', 'tool_dbcleaner'), 'tool-dbcleaner-form');
-echo '<center>';
-echo $OUTPUT->single_button(new moodle_url('/admin/tool/dbcleaner/deletedplugins.php', ['confirm' => 0, 'sesskey' => sesskey()]), get_string('deletedplugins', 'tool_dbcleaner'));
-echo '</center>';
+if (!empty($results)) {
+    echo $OUTPUT->notification('<pre>'.implode("\n", $results).'</pre>', 'success');
+}
 
-echo $OUTPUT->box(get_string('fkeys_desc', 'tool_dbcleaner'), 'tool-dbcleaner-form');
-echo '<center>';
-echo $OUTPUT->single_button(new moodle_url('/admin/tool/dbcleaner/fkeys.php', ['confirm' => 0, 'sesskey' => sesskey()]), get_string('fkeys', 'tool_dbcleaner'));
-echo '</center>';
+echo $OUTPUT->heading(get_string('fromversionrecords', 'tool_dbcleaner'), 3);
 
-echo $OUTPUT->box(get_string('purgelogs_desc', 'tool_dbcleaner'), 'tool-dbcleaner-form');
-echo '<center>';
-echo $OUTPUT->single_button(new moodle_url('/admin/tool/dbcleaner/purgelogs.php', ['confirm' => 0, 'sesskey' => sesskey()]), get_string('purgelogs', 'tool_dbcleaner'));
-echo '</center>';
+echo $renderer->missing_plugin_list($pluginlist);
+
+echo '<div class="tool-dbcleaner-form-buttons">';
+echo $OUTPUT->single_button(new moodle_url('/admin/tool/dbcleaner/deletedplugins.php', array('what' => 'cleanup', 'sesskey' => sesskey())), get_string('cleanupplugins', 'tool_dbcleaner'));
+
+echo $OUTPUT->single_button(new moodle_url('/admin/tool/dbcleaner/index.php'), get_string('goback', 'tool_dbcleaner'));
+echo '</div>';
 
 echo $OUTPUT->footer();

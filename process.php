@@ -19,7 +19,7 @@
  *
  * @package    tool_dbcleaner
  * @category   tool
- * @copyright  2010 David Mudrak <david.mudrak@gmail.com>
+ * @copyright  2018 Valery Fremaux <valery.fremaux@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require('../../../config.php');
@@ -27,9 +27,11 @@ require_once($CFG->dirroot.'/admin/tool/dbcleaner/forms/foreignkey_form.php');
 require_once($CFG->dirroot.'/admin/tool/dbcleaner/lib.php');
 
 $confirm = optional_param('confirm', 0, PARAM_BOOL);
+$singlekey = optional_param('singlekey', '', PARAM_TEXT);
 $systemcontext = context_system::instance();
 
 require_login();
+require_capability('moodle/site:config', $systemcontext);
 require_sesskey();
 
 $url = new moodle_url('/admin/tool/dbcleaner/addkey.php');
@@ -47,7 +49,14 @@ if (empty($cleanmaptable)) {
     dbcleaner_component::get_update_cache();
 }
 
-if ($confirm) {
+if (!empty($singlekey)) {
+    $key = json_decode($singlekey);
+
+    echo $OUTPUT->render_from_template('tool_dbcleaner/purge_singlekey', $key);
+
+    $str = '';
+    tool_dbcleaner_clean_key($key, $str);
+} else if ($confirm) {
     if ($cleanmaptable) {
         echo $OUTPUT->heading(get_string('process', 'tool_dbcleaner'), 3);
         echo '<pre>';
@@ -79,23 +88,19 @@ if ($confirm) {
         echo '</pre>';
 
         if ($allkeycount) {
-            echo "Corruption : ".(sprintf('%.2f', $badkeycount/$allkeycount*100));
+            echo "Corruption : ".(sprintf('%.2f', $badkeycount / $allkeycount * 100));
         }
     }
 }
 
-if (!$confirm) {
-    echo '<center>';
-    echo $OUTPUT->single_button(new moodle_url('/admin/tool/dbcleaner/process.php', array('confirm' => 1, 'sesskey' => sesskey())), get_string('confirm', 'tool_dbcleaner'));
-    echo '</center>';
+echo '<div class="tool-dbcleaner-form-buttons">';
+if (!$confirm && !$singlekey) {
+    echo $OUTPUT->single_button(new moodle_url('/admin/tool/dbcleaner/process.php', ['confirm' => 1, 'sesskey' => sesskey()]), get_string('cleandb', 'tool_dbcleaner'));
 } else {
-    echo '<center>';
-    echo $OUTPUT->single_button(new moodle_url('/admin/tool/dbcleaner/process.php', array('confirm' => 0, 'sesskey' => sesskey())), get_string('recheck', 'tool_dbcleaner'));
-    echo '</center>';
+    echo $OUTPUT->single_button(new moodle_url('/admin/tool/dbcleaner/process.php', ['confirm' => 0, 'sesskey' => sesskey()]), get_string('recheck', 'tool_dbcleaner'));
 }
 
-echo '<center>';
 echo $OUTPUT->single_button(new moodle_url('/admin/tool/dbcleaner/index.php'), get_string('goback', 'tool_dbcleaner'));
-echo '</center>';
+echo '</div>';
 
 echo $OUTPUT->footer();
