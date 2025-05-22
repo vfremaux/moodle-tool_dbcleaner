@@ -42,6 +42,7 @@ class PurgeLogs_Form extends moodleform {
             $mform->setType('origin', PARAM_RAW);
 
             $sizeselect = [
+                '10000' => '10k '.get_string('records', 'tool_dbcleaner'),
                 '50000' => '50k '.get_string('records', 'tool_dbcleaner'),
                 '100000' => '100k '.get_string('records', 'tool_dbcleaner'),
                 '500000' => '500k '.get_string('records', 'tool_dbcleaner'),
