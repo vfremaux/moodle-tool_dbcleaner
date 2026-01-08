@@ -15,10 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Language customization report upgrades
+ * Cleans foreign keys inconsistancies in DB
  *
  * @package    tool_dbcleaner
- * @category   tool
  * @copyright  2018 Valery Fremaux <valery.fremaux@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -43,11 +42,7 @@ echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('cleandb', 'tool_dbcleaner'));
 
 // Get all keys.
-$cache = cache::make('tool_dbcleaner', 'cleanmap');
-$cleanmaptable = $cache->get('cleanmapdata');
-if (empty($cleanmaptable)) {
-    dbcleaner_component::get_update_cache();
-}
+$cleanmaptable = \tool_dbcleaner\component::get_update_cache();
 
 if (!empty($singlekey)) {
     $key = json_decode($singlekey);
@@ -68,28 +63,26 @@ if (!empty($singlekey)) {
         echo '</pre>';
     }
 } else {
-    if ($cleanmaptable) {
-        echo $OUTPUT->heading(get_string('simulate', 'tool_dbcleaner'), 3);
-        $badkeycount = 0;
-        $allkeycount = 0;
-        echo '<pre>';
-        $badkey = 0;
-        foreach ($cleanmaptable as $key) {
-            $str = '';
-            $badkey = tool_dbcleaner_clean_key($key, $str, true);
-            $allkeycount++;
-            if ($badkey) {
-                $badkeycount++;
-                echo '<span class="error">'.$str.'</span>';
-            } else {
-                echo $str;
-            }
+    echo $OUTPUT->heading(get_string('simulate', 'tool_dbcleaner'), 3);
+    $badkeycount = 0;
+    $allkeycount = 0;
+    echo '<pre>';
+    $badkey = 0;
+    foreach ($cleanmaptable as $key) {
+        $str = '';
+        $badkey = tool_dbcleaner_clean_key($key, $str, true);
+        $allkeycount++;
+        if ($badkey) {
+            $badkeycount++;
+            echo '<span class="error">'.$str.'</span>';
+        } else {
+            echo $str;
         }
-        echo '</pre>';
+    }
+    echo '</pre>';
 
-        if ($allkeycount) {
-            echo "Corruption : ".(sprintf('%.2f', $badkeycount / $allkeycount * 100));
-        }
+    if ($allkeycount) {
+        echo "Corruption : ".(sprintf('%.2f', $badkeycount / $allkeycount * 100));
     }
 }
 

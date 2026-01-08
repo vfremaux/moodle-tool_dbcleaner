@@ -44,8 +44,7 @@ if (!empty($action)) {
 
 $PAGE->set_pagelayout('admin');
 
-$keylist = dbcleaner_component::get_update_cache();
-
+$keylist = \tool_dbcleaner\component::get_update_cache();
 $renderer = $PAGE->get_renderer('tool_dbcleaner');
 
 // Otherwise display the settings form.

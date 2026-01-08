@@ -37,7 +37,7 @@ function xmldb_tool_dbcleaner_upgrade($oldversion) {
     if ($oldversion < 2024071800) {
 
         // Reload cache to absorb moodle 4.1 changes.
-        dbcleaner_component::get_update_cache();
+        tool_dbcleaner\component::get_update_cache();
         
         // Tool Sync savepoint reached.
         upgrade_plugin_savepoint(true, 2024071800, 'tool', 'dbcleaner');
