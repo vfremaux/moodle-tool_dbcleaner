@@ -18,7 +18,6 @@
  * Version details.
  *
  * @package     tool_dbcleaner
- * @category    tool
  * @author      Valery Fremaux <valery.fremaux@gmail.com>
  * @copyright   2016 Valery Fremaux (http://www.mylearningfactory.com)
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -35,3 +34,4 @@ $plugin->supported = [403, 405];
 
 // Non Moodle attributes.
 $plugin->codeincrement = '4.5.0002';
+$plugin->privacy = 'public';

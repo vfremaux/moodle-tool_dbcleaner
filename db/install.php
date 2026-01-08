@@ -29,7 +29,7 @@ require_once($CFG->dirroot.'/admin/tool/dbcleaner/lib.php');
 function xmldb_tool_dbcleaner_install() {
     global $DB, $CFG;
 
-    dbcleaner_component::get_update_cache();
+    \tool_dbcleaner\component::get_update_cache();
 
     return true;
 }

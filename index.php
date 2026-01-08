@@ -38,7 +38,7 @@ require_once($CFG->dirroot.'/admin/tool/dbcleaner/lib.php');
 $PAGE->set_pagelayout('admin');
 $PAGE->set_context($systemcontext);
 
-$keylist = dbcleaner_component::get_update_cache();
+$keylist = \tool_dbcleaner\component::get_update_cache();
 
 $renderer = $PAGE->get_renderer('tool_dbcleaner');
 

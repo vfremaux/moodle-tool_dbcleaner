@@ -17,12 +17,12 @@
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Language customization report upgrades
+ * Output renderer
  *
  * @package    tool_dbcleaner
- * @category   tool
- * @copyright  2010 David Mudrak <david.mudrak@gmail.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author      Valery Fremaux <valery.fremaux@gmail.com>
+ * @copyright   2016 Valery Fremaux (http://www.mylearningfactory.com)
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 class tool_dbcleaner_renderer extends plugin_renderer_base {
@@ -41,7 +41,7 @@ class tool_dbcleaner_renderer extends plugin_renderer_base {
         $table->size = array('20%', '20%', '20%', '20%', '20%');
 
         $cmd = '';
-        foreach($keylist as $key) {
+        foreach ($keylist as $key) {
             if (!empty($key->id)) {
                 $deleteurl = new moodle_url('/admin/tool/dbcleaner/index.php', array('what' => 'delete', 'id' => $key->id));
                 $cmd = '<a href="'.$deleteurl.'">'.$OUTPUT->pix_icon('t/delete', get_string('delete')).'</a>';

@@ -16,6 +16,7 @@
 
 namespace tool_dbcleaner\task;
 
+use stdClass;
 use core\task\adhoc_task;
 
 defined('MOODLE_INTERNAL') || die();
@@ -91,16 +92,7 @@ class purgelogs_task extends adhoc_task {
         }
 
         if ($CFG->debug >= DEBUG_NORMAL) {
-            $checksql = "
-                SELECT
-                    origin,
-                    COUNT(*)
-                FROM
-                   {logstore_standard_log}
-                GROUP BY
-                    origin
-            ";
-            $pre = $DB->get_record_sql($checksql);
+            $pre = $this->get_check_counts();
         }
 
         $sql = "
@@ -113,7 +105,7 @@ class purgelogs_task extends adhoc_task {
         $DB->execute($sql, $deleteparams);
 
         if ($CFG->debug >= DEBUG_NORMAL) {
-            $post = $DB->get_record_sql($checksql);
+            $post = $this->get_check_counts();
 
             $output =  '|         |    pre |    post |    delta  |'."\n";
             $output .= "|     web |  {$pre->web} | {$post->web} | ".($post->web - $pre->web).' |'."\n";
@@ -141,5 +133,40 @@ class purgelogs_task extends adhoc_task {
         $task->set_component('tool_dbcleaner');
         $task->set_next_run_time(time() + (2 * 60)); // Bounce every 2 minutes.
         \core\task\manager::queue_adhoc_task($task);
+    }
+
+    protected function get_check_counts() {
+        global $DB;
+
+        $checksql = "
+            SELECT
+                origin,
+                COUNT(*) as cnt
+            FROM
+               {logstore_standard_log}
+            GROUP BY
+                origin
+        ";
+        $recs = $DB->get_records_sql($checksql);
+        $counts = new StdClass;
+        if ($recs) {
+            foreach ($recs as $rec) {
+                if (empty($rec->origin)) {
+                    $rec->origin = 'undefined';
+                }
+                $counts->{$rec->origin} = $rec->cnt;
+            }
+        }
+        if (empty($counts->cli)) {
+            $counts->cli = 0;
+        }
+        if (empty($counts->ws)) {
+            $counts->ws = 0;
+        }
+        if (empty($counts->restore)) {
+            $counts->restore = 0;
+        }
+
+        return $counts;
     }
 }
